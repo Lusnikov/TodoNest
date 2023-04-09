@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 import { $api } from '@/pages/api/api'
-import { RefreshReturn, Section, UserInterface } from '@/types/types'
+import { RefreshReturn, Section, SetTodoData, Todos, UserInterface } from '@/types/types'
 import { mockTodos } from '@/utils/testConstants'
 
 
@@ -24,7 +24,29 @@ export const createGroup = createAsyncThunk<Section, string>(
     })
     return  {
       name: groupName,
-      id: 1990
+      id: Math.floor(Math.random() * 9991) + 10
+    }
+  }
+)
+
+export const setTodoGroup = createAsyncThunk<Todos, SetTodoData>('todos/setGroup',
+  async (d) => {
+    const promise = await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(1)
+      }, 1000)
+    })
+    return  {
+      content: 'Туду для дома',
+      dateCreated: '',
+      id: d.todoId,
+      status: 'ended',
+      title: 'Поиграться с семьей',
+      section: {
+        id: d.sectionId,
+        name: ',fdsl[fs'
+      },
+      completed:false,
     }
   }
 )
@@ -100,6 +122,12 @@ export const userSlice = createSlice({
       if (!state) return
       const {payload} = action
       state.sections = [...state.sections, payload]
+     })
+
+     builder.addCase(setTodoGroup.fulfilled, (state, {payload}) => {
+      if (!state) return
+      // console.warn(action.payload)
+      state.todos = [...state.todos.filter(elem => elem.id !== payload.id ), payload]
      })
   
   }

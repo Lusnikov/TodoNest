@@ -23,10 +23,17 @@ export type Todos = {
   dateCreated: string,
   section?: Section,
   dateEnded?: string ,
-  status: "endend" | "inProcess" | "success" ,
+  status: "ended" | "inProcess" | "success" ,
   title: string,
   content: string,
   completed: boolean
 }
 
 export type CreateTodoData  = Pick<Todos, 'title' | 'content' | 'dateEnded'>
+
+
+
+export interface SetTodoData {
+  sectionId: number,
+  todoId: number,
+}

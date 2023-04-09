@@ -36,8 +36,6 @@ const TodoList = () => {
 
   const dispatch = useAppDispatch()
 
- 
-
   const getHandlerByIndex = (index:number) => ({
     0: () => todos.filter(e => !e.completed),
     1: () => todos.filter(e => true) ,
@@ -45,15 +43,9 @@ const TodoList = () => {
       return todos.filter(e => e.completed)
     }
     
-  }[index] || (() => {
-      return todos
-      .filter( todo => {
-        console.warn(sections[index].id)
-        // console.warn(todo?.section?.id === sections[index].id)
-        return todo?.section?.id === sections[index].id
-      }
-      )
-  }))
+  }[index] || ( () =>  todos.filter( todo =>  todo?.section?.id === sections[index].id)))
+
+
   
   const onChangeCheckbox = (value: boolean, id: number) => {
     if (value) return setSelectedId([...selectedId, id])
@@ -74,6 +66,7 @@ const TodoList = () => {
             {sections
             .map((section, index) => (
               <DropTab
+                idSection={section.id}
                 key={`Todo${section.id}`}
                 isDropable={index >= defaultSections.length }
               >
@@ -136,7 +129,6 @@ const TodoList = () => {
               title={todo.title}
               dateEnded={todo.dateEnded ?? undefined}
               section={todo.section}
-
 
             />
           )}
