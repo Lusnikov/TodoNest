@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 import { $api } from '@/pages/api/api'
-import { RefreshReturn, Section, SetTodoData, Todos, UserInterface } from '@/types/types'
-import { mockTodos } from '@/utils/testConstants'
+import { AddTodoPayload, RefreshReturn, Section, SetTodoData, Todos, UserInterface } from '@/types/types'
+import { mockSecions, mockTodos } from '@/utils/testConstants'
 
 
 // Отвечает за обновление refresh-токена и возврат информации о пользователе в случае его валидности
@@ -62,10 +62,26 @@ export const completeTodo = createAsyncThunk('todos/complete',
     }
 )
 
-export const addTodo = createAsyncThunk('users/getUser', 
-    async () => {
-      const {data} = await $api.post<RefreshReturn>('/users/getUser')
-      return data
+export const addTodo = createAsyncThunk<Todos, AddTodoPayload>('users/getUser', 
+    async (e) => {
+      console.error(e)
+      const promise = await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(1)
+        }, 1000)
+      })
+
+
+      return   {
+        content: e.content,
+        dateCreated: '',
+        id: Math.floor(Math.random() * 9991) + 10,
+        status: 'ended',
+        title: e.title,
+        section: e.section ?? undefined,
+        completed:false,
+        
+      }
     }
 )
 
@@ -87,10 +103,12 @@ const initialState: UserInterface | null = {
   avatarUrl: '',
   id: 1,
   name: '1',
-  sections: [],
-  todos:  mockTodos,
+  sections: mockSecions,
+  todos:  [],
 
 } as UserInterface | null
+
+// const initialState: UserInterface | null = null as UserInterface | null
 
 export const userSlice = createSlice({
   name: 'counter',
@@ -128,6 +146,11 @@ export const userSlice = createSlice({
       if (!state) return
       // console.warn(action.payload)
       state.todos = [...state.todos.filter(elem => elem.id !== payload.id ), payload]
+     })
+
+     builder.addCase(addTodo.fulfilled, (state, {payload}) => {
+      if (!state) return
+      state.todos = [payload,...state.todos]
      })
   
   }

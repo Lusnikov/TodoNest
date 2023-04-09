@@ -36,4 +36,10 @@ export type CreateTodoData  = Pick<Todos, 'title' | 'content' | 'dateEnded'>
 export interface SetTodoData {
   sectionId: number,
   todoId: number,
+  
+}
+
+export interface AddTodoPayload extends Pick<Todos, 'title' | 'content' | 'section' >{
+  date?: string,
+  time?: string 
 }

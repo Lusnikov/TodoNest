@@ -6,6 +6,7 @@ import {DndProvider} from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useAppSelector } from '@/store/storeHooks';
 import { NextComponentType, NextPageContext } from 'next';
+import '../styles/globals.css'
 
 export interface CustomTheme {
   header: {

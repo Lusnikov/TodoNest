@@ -7,6 +7,7 @@ import Head from 'next/head'
 
 
 export default function Home() {
+  const user = useAppSelector((e) => e.user)
   return (
     <>
       <Head>
@@ -16,7 +17,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
      <Header/>
-     <TodoList  />
+     {user ?<TodoList  /> : 'Не авторизован' }
+     
 
     
     </>

@@ -45,5 +45,11 @@ export const mockTodos: Todos[] = [
  ]
 
 export const mockSecions:Section[]=  [
+  {id:1, name:"Дом"},
+  {
+    id: 3,
+    name: 'Семья'
+  }
+  
   // {id:}
 ]

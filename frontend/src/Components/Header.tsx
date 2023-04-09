@@ -15,21 +15,6 @@ const Header = (props: Props) => {
   const bgColor = theme.header[colorMode]
   const p = useAppSelector((e: RootState) => e.user)
 
-  const [{ isOver }, drop] = useDrop({
-    accept: "todo",
-    drop: (item) => {
-      // const newGroupId = id;
-      // const updatedTodos = todos.map((todo) => {
-      //   if (todo.id === item.id) {
-      //     return { ...todo, groupId: newGroupId };
-      //   }
-      //   return todo;
-      },
-      collect: (monitor) => ({
-        isOver: !!monitor.isOver(),
-      }),
-    });
-  
   return (
     <>
     <Flex
@@ -62,7 +47,7 @@ const Header = (props: Props) => {
         flexGrow={1}
         mt={{ base: 4, md: 0 }}
       >
-        <Text>Docs</Text>
+        <Text>О нам</Text>
         <Text>Examples</Text>
         <Text>Blog</Text>
       </Stack>
@@ -79,12 +64,11 @@ const Header = (props: Props) => {
             onClick={toggleColorMode}
           
           />  
-        <Button
-          variant="outline"
-          _hover={{ bg: "teal.700", borderColor: "teal.700" }}
+        <Link
+        href={'/registration'}
         >
           Create account
-        </Button>
+        </Link>
       </Box>
     </Flex>
     </>
