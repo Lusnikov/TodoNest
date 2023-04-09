@@ -40,6 +40,6 @@ export interface SetTodoData {
 }
 
 export interface AddTodoPayload extends Pick<Todos, 'title' | 'content' | 'section' >{
-  date?: string,
+  date?: Date,
   time?: string 
 }

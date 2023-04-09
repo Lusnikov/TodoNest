@@ -4,14 +4,11 @@ import { Section } from '@/types/types'
 import { Button, FormControl, FormErrorMessage, FormLabel, Heading, Input, InputGroup, InputLeftAddon, InputLeftElement, Textarea, useDisclosure } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 import Select from 'react-select'
-import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
-import InputMask from 'react-input-mask';
-import "react-datepicker/dist/react-datepicker.css";
-import 'react-time-picker/dist/TimePicker.css';
-import { formatDate } from '@/utils/helpers'
 import TodoDatePicker from './todoForm/TodoDatePicker'
 
+import "react-datepicker/dist/react-datepicker.css";
+import 'react-time-picker/dist/TimePicker.css';
 
 type Props = {}
 
@@ -58,7 +55,6 @@ const CreateTodoForm = (props: Props) => {
     })).finally(() => {
       setIsCreate(false)
     })
-
   }
   
   const submitDisabled = isCreated || todoName === '' || todoContent === ''

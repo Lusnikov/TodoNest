@@ -16,32 +16,27 @@ const TodoDatePicker = (props: Props) => {
     initialValue
   } = props
 
-//   const [date, setDate] = useState<any>(null)
 
   return (
-    <>
-    <DatePicker
-              isClearable 
-              selected={initialValue}
-             
-              dateFormat="dd-MM-yyyy"
-              customInput={
-                <InputMask mask="99/99/9999" placeholder="ДД/ММ/ГГГГ"   >
-                    <Input isInvalid={false}/>
-                </InputMask>
-            }
-              onChange={(date, ed) => { 
-                let resultDate = date;
-                if (!ed) return
-                if (!date) resultDate = null
-                if (ed.type === 'change' && date) resultDate = new Date(formatDate(date)) 
-                
-                // setDate(resultDate)
-                onChange(resultDate)
-                
-              }} 
+     <DatePicker
+        isClearable 
+        selected={initialValue}
+        dateFormat="dd-MM-yyyy"
+        customInput={
+        <InputMask mask="99/99/9999" placeholder="ДД/ММ/ГГГГ"   >
+            <Input isInvalid={false}/>
+        </InputMask>
+        }
+        onChange={(date, ed) => { 
+        let resultDate = date;
+        if (!ed) return
+        if (!date) resultDate = null
+        if (ed.type === 'change' && date) resultDate = new Date(formatDate(date)) 
+        onChange(resultDate)
+        
+        }} 
            
-    /></>
+    />
   )
 }
 
