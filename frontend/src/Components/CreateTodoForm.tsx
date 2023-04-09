@@ -9,16 +9,12 @@ import TimePicker from 'react-time-picker';
 import InputMask from 'react-input-mask';
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-time-picker/dist/TimePicker.css';
+import { formatDate } from '@/utils/helpers'
+import TodoDatePicker from './todoForm/TodoDatePicker'
 
 
 type Props = {}
 
-function formatDate(date:Date) {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-}
 
 const CreateTodoForm = (props: Props) => {
   const [group, setGroup]  = useState<Section>()
@@ -31,7 +27,7 @@ const CreateTodoForm = (props: Props) => {
   const [todoContent, setTodoContent] = useState<string>('')
   const [contentError, setContentError] = useState<string>('')
 
-  const [date, setDate] = useState<any>(null)
+  const [date, setDate] = useState<Date | null>(null)
   const [time, setTime] = useState<any>('23:59')
 
   const dispatch = useAppDispatch()
@@ -39,21 +35,18 @@ const CreateTodoForm = (props: Props) => {
 
   const onChangeHandler = (e:React.ChangeEvent<HTMLInputElement>) => {
     setTodoName(e.target.value)
-    if (e.target.value === ''){
-      return setTodoError('Поле пустое')
-    }
+    if (e.target.value === '') return setTodoError('Поле пустое')
     setTodoError('')
   }
 
   const textareaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTodoContent(e.target.value)
-    if (e.target.value === ''){
-      console.warn(!valid)
-      return setContentError('Поле пустое')
-    }
+    if (e.target.value === '') return setContentError('Поле пустое')
     setContentError('')
   }
 
+  const datePickerHandler = (date: Date|null ) => setDate(date)
+  
   const createTodo =  () => {
     setIsCreate(true)
     dispatch(addTodo({
@@ -67,12 +60,11 @@ const CreateTodoForm = (props: Props) => {
     })
 
   }
+  
   const submitDisabled = isCreated || todoName === '' || todoContent === ''
-
   const firstInputInvalid  = todoName === '' && isDirty;
   const textAreatInvalid = todoContent === '' && isDirty;
   const valid = !firstInputInvalid && !textAreatInvalid
-
 
   return (
     <FormControl pt={10} isInvalid={!valid} >
@@ -112,33 +104,10 @@ const CreateTodoForm = (props: Props) => {
           Время завершения туду (необязательно)
         </FormLabel>
 
-
-          <DatePicker 
-              isClearable selected={date}
-              value={date}
-              dateFormat="dd-MM-yyyy"
-              showFourColumnMonthYearPicker
-              customInput={
-                <InputMask mask="99/99/9999" placeholder="ДД/ММ/ГГГГ"   >
-                    <Input isInvalid={false}/>
-                </InputMask>
-            }
-              onChange={(date, ed) => { 
-                if (ed && date){
-                  if (ed.type === 'change'){
-                    const dae = new Date(formatDate(date))
-                    console.warn(dae)
-                    return setDate(dae)
-                    // return     setDate() 
-                  }
-                }
-                
-                setDate(date)
-              }} 
-           
-          />
-
-    
+        <TodoDatePicker
+          initialValue={date}
+          onChange={datePickerHandler}
+        />    
         {date && <>
           <TimePicker
             value={time ?? "23:59"}
@@ -146,6 +115,7 @@ const CreateTodoForm = (props: Props) => {
             onChange={e => setTime(e)}
           />
         </>}
+
         <FormLabel>
           Выберите группу (необязательно)
         </FormLabel>
@@ -167,8 +137,6 @@ const CreateTodoForm = (props: Props) => {
         >
             Создать
         </Button>
-
-    
 
     </FormControl>
   )
