@@ -1,46 +1,32 @@
-import { addTodo } from '@/store/slice/user.slice'
-import { useAppDispatch, useAppSelector } from '@/store/storeHooks'
-import { Section } from '@/types/types'
-import { Button, FormControl, FormErrorMessage, FormLabel, Heading, Input, InputGroup, InputLeftAddon, InputLeftElement, Textarea, useDisclosure } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 import Select from 'react-select'
 import TimePicker from 'react-time-picker';
 import TodoDatePicker from './todoForm/TodoDatePicker'
+
+import { addTodo } from '@/store/slice/user.slice'
+import { useAppDispatch, useAppSelector } from '@/store/storeHooks'
+import { Section } from '@/types/types'
+import { Button, FormControl, FormErrorMessage, FormLabel, Heading, Input, Textarea, } from '@chakra-ui/react'
+import { useDefaultInput } from '@/hooks/useDefaultInput'
 
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-time-picker/dist/TimePicker.css';
 
 type Props = {}
 
-
 const CreateTodoForm = (props: Props) => {
-  const [group, setGroup]  = useState<Section>()
+  const [group, setGroup,]  = useState<Section>()
   const [isCreated, setIsCreate] = useState<boolean>(false)
   const [isDirty, setIsDirty] = useState<boolean>(false)
 
-  const [todoName, setTodoName] = useState<string>('')
-  const [todoError, setTodoError] = useState<string>('')
- 
-  const [todoContent, setTodoContent] = useState<string>('')
-  const [contentError, setContentError] = useState<string>('')
+  const [todoName, todoError, onChangeHandler ] = useDefaultInput()
+  const [todoContent,contentError,textareaOnChange  ] = useDefaultInput()
 
   const [date, setDate] = useState<Date | null>(null)
   const [time, setTime] = useState<any>('23:59')
 
   const dispatch = useAppDispatch()
-  const sections = useAppSelector(e => e.user?.sections as Section[])
-
-  const onChangeHandler = (e:React.ChangeEvent<HTMLInputElement>) => {
-    setTodoName(e.target.value)
-    if (e.target.value === '') return setTodoError('Поле пустое')
-    setTodoError('')
-  }
-
-  const textareaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTodoContent(e.target.value)
-    if (e.target.value === '') return setContentError('Поле пустое')
-    setContentError('')
-  }
+  const sections = useAppSelector(e => e.user?.sections ?? [])
 
   const datePickerHandler = (date: Date|null ) => setDate(date)
   
@@ -52,7 +38,8 @@ const CreateTodoForm = (props: Props) => {
       section: group,
       date: date ?? undefined,
       time: time ?? undefined
-    })).finally(() => {
+    }))
+    .finally(() => {
       setIsCreate(false)
     })
   }
@@ -79,12 +66,14 @@ const CreateTodoForm = (props: Props) => {
           placeholder='Заголовок Todo' 
           maxW={'480px'}
         />
-         <FormErrorMessage>
-             {todoError}
-            </FormErrorMessage>
+        <FormErrorMessage>
+          {todoError}
+        </FormErrorMessage>
+
         <FormLabel>
           Введите Контент
         </FormLabel>
+
         <Textarea 
           onFocus={() => setIsDirty(true)}
           value={todoContent}
@@ -92,9 +81,9 @@ const CreateTodoForm = (props: Props) => {
           placeholder="Введите текстовое содержание" 
           onChange={textareaOnChange}
         />
-         <FormErrorMessage>
-             {contentError}
-          </FormErrorMessage>
+        <FormErrorMessage>
+          {contentError}
+        </FormErrorMessage>
           
         <FormLabel>
           Время завершения туду (необязательно)
@@ -104,34 +93,34 @@ const CreateTodoForm = (props: Props) => {
           initialValue={date}
           onChange={datePickerHandler}
         />    
-        {date && <>
+
+        {date &&
           <TimePicker
             value={time ?? "23:59"}
             disableClock
             onChange={e => setTime(e)}
           />
-        </>}
+        }
 
         <FormLabel>
           Выберите группу (необязательно)
         </FormLabel>
+
         <Select 
           getOptionLabel={opt => opt.name}
           getOptionValue={opt => opt.name}
           placeholder={'Выберите группу'}
-          onChange={e => {
-            console.log(e)
-           setGroup(e as Section)
-          }}
+          onChange={e =>  setGroup(e as Section)}
           options={sections}
         />
 
         <Button 
             isLoading={isCreated} 
-            isDisabled={submitDisabled} mt={5}
+            isDisabled={submitDisabled} 
             onClick={createTodo}
+            mt={5}
         >
-            Создать
+          Создать
         </Button>
 
     </FormControl>
