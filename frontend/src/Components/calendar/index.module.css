@@ -1,0 +1,21 @@
+.container{
+    display: grid;
+    border: 1px solid red;
+    overflow: hidden;
+}
+
+.content{
+    display: grid;
+    overflow: auto;
+    padding-bottom: 30px;
+    grid-template-columns: repeat(7, 280px);
+}
+
+.gridElementTodo{
+    min-height: 300px;
+}
+
+.gridElement{
+    padding: 1rem .5rem;
+    border: 1px solid rgb(228, 228, 228);
+}

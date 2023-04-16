@@ -1,6 +1,28 @@
-import { Container } from "@chakra-ui/react"
+import { Alert, AlertIcon, Container, Heading } from "@chakra-ui/react"
 import Head from "next/head"
+
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  VStack,
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { isEmail } from "@/utils/helpers";
+import Link from "next/link";
+
+
 export default function Home() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const canSubmit = isEmail(email) && password.length > 0
+
+  const onSubmit = () => {
+
+  }
+
   return (
     <>
       <Head>
@@ -10,9 +32,37 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
  
-    <Container>
-      registration
-    </Container>
+      <Container maxW={'480px'} background="" display="flex" flexDirection="column" gap="30px">
+        <Heading >Вход в аккаунт</Heading>
+        <VStack spacing={4}>
+          <Alert status="error">
+              <AlertIcon/>
+              Возникла ошибка
+          </Alert>
+          <FormControl id="email">
+            <FormLabel>Email адрес</FormLabel>
+            <Input
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </FormControl>
+          <FormControl id="password">
+            <FormLabel>Пароль</FormLabel>
+            <Input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </FormControl>
+          <Link href={'registration'}>
+             Еще нет аккаунта? Зарегистрируйтесь
+          </Link>
+          <Button isDisabled={!canSubmit} colorScheme="blue" onClick={() => {}}>
+            Войти
+          </Button>
+        </VStack>
+      </Container>
     </>
   )
 }

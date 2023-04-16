@@ -47,7 +47,8 @@ const Header = (props: Props) => {
         flexGrow={1}
         mt={{ base: 4, md: 0 }}
       >
-        <Text>О нам</Text>
+        <Link href={'/manageTodo'}>123</Link>
+        <Text>О</Text>
         <Text>Examples</Text>
         <Text>Blog</Text>
       </Stack>

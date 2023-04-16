@@ -20,10 +20,10 @@ export interface RefreshReturn  {
 
 export type Todos = { 
   id: number,
-  dateCreated: string,
+  dateCreated: Date,
   section?: Section,
-  dateEnded?: string ,
-  status: "ended" | "inProcess" | "success" ,
+  dateEnded?: Date ,
+  // status: "ended" | "inProcess" | "success" ,
   title: string,
   content: string,
   completed: boolean
@@ -42,4 +42,11 @@ export interface SetTodoData {
 export interface AddTodoPayload extends Pick<Todos, 'title' | 'content' | 'section' >{
   date?: Date,
   time?: string 
+}
+
+export type OnChangeDatePayload = (todoId: number, newDate: Date) => void
+
+export interface UpdateTodoDateInput {
+  todoId: number,
+  date: Date
 }

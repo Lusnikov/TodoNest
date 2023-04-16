@@ -4,6 +4,7 @@ import type { RootState } from '../store'
 import { $api } from '@/pages/api/api'
 import { AddTodoPayload, RefreshReturn, Section, SetTodoData, Todos, UserInterface } from '@/types/types'
 import { mockSecions, mockTodos } from '@/utils/testConstants'
+import { updateTodoDate } from '../async/async'
 
 
 // Отвечает за обновление refresh-токена и возврат информации о пользователе в случае его валидности
@@ -38,7 +39,7 @@ export const setTodoGroup = createAsyncThunk<Todos, SetTodoData>('todos/setGroup
     })
     return  {
       content: 'Туду для дома',
-      dateCreated: '',
+      dateCreated: new Date(),
       id: d.todoId,
       status: 'ended',
       title: 'Поиграться с семьей',
@@ -74,7 +75,7 @@ export const addTodo = createAsyncThunk<Todos, AddTodoPayload>('users/getUser',
 
       return   {
         content: e.content,
-        dateCreated: '',
+        dateCreated:   new Date(),
         id: Math.floor(Math.random() * 9991) + 10,
         status: 'ended',
         title: e.title,
@@ -99,16 +100,16 @@ export const removeTodo = createAsyncThunk('todos/removeTodo',
 )
 
 
-const initialState: UserInterface | null = {
-  avatarUrl: '',
-  id: 1,
-  name: '1',
-  sections: mockSecions,
-  todos:  [],
+// const initialState: UserInterface | null = {
+//   avatarUrl: '',
+//   id: 1,
+//   name: '1',
+//   sections: mockSecions,
+//   todos:  mockTodos,
 
-} as UserInterface | null
+// } as UserInterface | null
 
-// const initialState: UserInterface | null = null as UserInterface | null
+const initialState: UserInterface | null = null as UserInterface | null
 
 export const userSlice = createSlice({
   name: 'counter',
@@ -151,6 +152,20 @@ export const userSlice = createSlice({
      builder.addCase(addTodo.fulfilled, (state, {payload}) => {
       if (!state) return
       state.todos = [payload,...state.todos]
+     })
+
+     builder.addCase(updateTodoDate.pending, (state, action) =>{
+        if (!state) return
+        const {meta: {arg}} = action
+        state.todos = state.todos.map(e => {
+          if (e.id === arg.todoId){
+            return {
+              ...e,
+              dateEnded: arg.date,
+            }
+          }
+          return e
+        })
      })
   
   }

@@ -26,15 +26,13 @@ const extendedTheme = extendTheme(theme)
 
 
 const MyApp = (props: {Component:NextComponentType<NextPageContext, any, any>, pageProps: any}) => {
-  const test = useAppSelector(e => e.user)
-  console.warn(test)
   const {Component, pageProps}= props
   return <>
-        <Alert status='error'>
+        {/* <Alert status='error'>
             <AlertIcon />
             <AlertTitle>Your browser is outdated!</AlertTitle>
             <AlertDescription>Your Chakra experience may be degraded.</AlertDescription>
-        </Alert>
+        </Alert> */}
         <Component {...pageProps} />
   </> 
 }
@@ -45,9 +43,8 @@ export default function App({ Component, pageProps }: AppProps) {
       <ChakraProvider theme={extendedTheme}>
         <ColorModeScript initialColorMode={extendedTheme.config.initialColorMode} />
         <DndProvider backend={HTML5Backend}>
-       
         <MyApp Component={Component} pageProps={pageProps}/>
-        
+
         </DndProvider>
       </ChakraProvider>
     </Provider>

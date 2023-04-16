@@ -1,6 +1,30 @@
-import { Container } from "@chakra-ui/react"
+import { Alert, AlertIcon, Container, Heading } from "@chakra-ui/react"
 import Head from "next/head"
+
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  VStack,
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { isEmail } from "@/utils/helpers";
+import Link from "next/link";
+
+
 export default function Home() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const canSubmit = (isEmail(email) && password.length > 8 && password.length < 20 ) &&  !isSubmitting
+
+  const onSubmit = () => {
+    setIsSubmitting(true)
+  }
+
   return (
     <>
       <Head>
@@ -10,9 +34,40 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
  
-    <Container>
-      registration
-    </Container>
+      <Container maxW={'480px'} background="" display="flex" flexDirection="column" gap="30px">
+        <Heading >Регистрация аккаунта </Heading>
+        <VStack spacing={4}>
+          { error !== '' &&
+            <Alert status="error">
+              <AlertIcon/>
+                Возникла ошибка
+            </Alert>
+           }
+          
+          <FormControl id="email">
+            <FormLabel>Email адрес</FormLabel>
+            <Input
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </FormControl>
+          <FormControl id="password">
+            <FormLabel>Пароль</FormLabel>
+            <Input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </FormControl>
+          <Link href={'signIn'}>
+             Уже есть аккаунт? Войдите
+          </Link>
+          <Button isDisabled={!canSubmit} isLoading={isSubmitting} colorScheme="blue" onClick={onSubmit}>
+            Войти
+          </Button>
+        </VStack>
+      </Container>
     </>
   )
 }

@@ -8,6 +8,9 @@ import { AnimatePresence } from 'framer-motion';
 import Menu2 from './Menu2';
 import { useDrop } from 'react-dnd';
 import DropTab from './motion/DropTab';
+import { InstrumentsList } from './TodoList/InstrumentsList';
+import { List } from './List';
+
 
 const defaultSections = [
   {
@@ -27,9 +30,8 @@ const defaultSections = [
 type Props = {
 }
 
-const TodoList = () => {
+const TodoList = ({}: Props) => {
   const [tabIndex, setTabIndex] = useState<number>(0)
-  const [isDeleting, setIsDeleting] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<number[]>([])
   const todos = useAppSelector(state => state.user?.todos as Todos[])
   const sections = [...defaultSections,...useAppSelector(state => state.user?.sections as Section[])]
@@ -39,14 +41,15 @@ const TodoList = () => {
   const getHandlerByIndex = (index:number) => ({
     0: () => todos.filter(e => !e.completed),
     1: () => todos.filter(e => true) ,
-    2: () => {
-      return todos.filter(e => e.completed)
-    }
-    
-  }[index] || ( () =>  todos.filter( todo =>  todo?.section?.id === sections[index].id)))
+    2: () => todos.filter(e => e.completed) 
+  }[index] || ( () => todos.filter( todo =>  todo?.section?.id === sections[index].id))
+  )
 
+  const tabChangeHandler = (index:number) => {
+      setTabIndex(index)
+      setSelectedId([])
+  }
 
-  
   const onChangeCheckbox = (value: boolean, id: number) => {
     if (value) return setSelectedId([...selectedId, id])
     setSelectedId(selectedId.filter(ident => ident !== id ))
@@ -56,82 +59,76 @@ const TodoList = () => {
   return (
     <>
        <Container maxW={'1280px'} display="flex" flexDirection="column" gap="30px">
-        <Tabs
-          onChange={(index) => {
-            setTabIndex(index)
-            setSelectedId([])
-          }}
-        >
-          <TabList >
-            {sections
-            .map((section, index) => (
-              <DropTab
-                idSection={section.id}
-                key={`Todo${section.id}`}
-                isDropable={index >= defaultSections.length }
-              >
-                {section.name}
-              </DropTab>
-            ))
-            }
-          </TabList>
-        </Tabs>
-          <Menu2 />
+          <Tabs onChange={tabChangeHandler}>
+            <TabList >
+              <List 
+                elements={sections} 
+                renderItem={({id, name}, index) => 
+                  <DropTab
+                    idSection={id}
+                    key={`Tab${id}`}
+                    isDropable={index >= defaultSections.length }
+                  >
+                      {name}
+                  </DropTab>
+                }
+              />
+            </TabList>
+          </Tabs>
 
-        {
-          selectedId.length > 0 && 
-          <Wrap>
-            <WrapItem>
-              <Button 
-                colorScheme='red'
-                isLoading={isDeleting}
-                onClick={e => {
-                  setIsDeleting(true)
-                  dispatch(removeTodo(selectedId)).finally(() => {
-                    setIsDeleting(false)
-                    setSelectedId([])
-                  })
-                }}
-              >
-                  Удалить 
-              </Button>
-            </WrapItem>
-            <WrapItem>
-              <Button colorScheme='yellow'>
-                  Редактировать 
-              </Button>
-            </WrapItem>
-            <WrapItem>
-              <Button 
-                  colorScheme='green'
-                  onClick={() => {
-                    dispatch(completeTodo(selectedId))
-                  }}
-              >
-                  Завершить 
-              </Button>
-            </WrapItem>
+          <Menu2 />
+          {
+              selectedId.length > 0 && 
+                <InstrumentsList
+                  onDelete={() =>  dispatch(removeTodo(selectedId))
+                    .finally(() => setSelectedId([]))
+                  }
+               />
+          // <Wrap>
+          //   <WrapItem>
+          //     <Button 
+          //       colorScheme='red'
+          //       isLoading={isDeleting}
+          //       onClick={e => {
+          //         setIsDeleting(true)
+          //         dispatch(removeTodo(selectedId)).finally(() => {
+          //           setIsDeleting(false)
+          //           setSelectedId([])
+          //         })
+          //       }}
+          //     >
+          //         Удалить 
+          //     </Button>
+          //   </WrapItem>
+          //   <WrapItem>
+          //     <Button colorScheme='yellow'>
+          //         Редактировать 
+          //     </Button>
+          //   </WrapItem>
+          //   <WrapItem>
+          //     <Button 
+          //         colorScheme='green'
+          //         onClick={() => {
+          //           dispatch(completeTodo(selectedId))
+          //         }}
+          //     >
+          //         Завершить 
+          //     </Button>
+          //   </WrapItem>
             
-          </Wrap>
+          // </Wrap>
         }
        
        <AnimatePresence mode='wait'> 
-        { filteredTodos()
-          .map(todo =>
-         
-           <TodoItem 
-              completed={todo.completed}
-              selectCallback={onChangeCheckbox}
-              id={todo.id}
-              key={`TodoItem${todo.id}$`}
-              content={todo.content}
-              dateCreated={todo.dateCreated}
-              title={todo.title}
-              dateEnded={todo.dateEnded ?? undefined}
-              section={todo.section}
-
-            />
-          )}
+          <List
+              elements={filteredTodos()}
+              renderItem={todo =>   <TodoItem 
+                selectCallback={onChangeCheckbox}
+                key={`TodoItem${todo.id}$`}
+                todoItem={todo}
+              />
+            }
+          />
        </AnimatePresence>
           
         
