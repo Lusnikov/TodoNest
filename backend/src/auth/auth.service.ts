@@ -1,5 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
+import { SignInDto } from './dto/signIn.dto';
 
 @Injectable()
 export class AuthService {
@@ -7,13 +8,14 @@ export class AuthService {
         private userService: UserService
     ){}
 
-    async login(){
+    async login(signInDto: SignInDto){
         // Проверить аккаунт на статус активации
-
+        // Найти пользователя 
+        const {email, password} = signInDto
+        this.userService.getUserBy('email', '')
     }
 
     async registration(email: string, password: string){
-        console.log('registration')
         const createdUser = await this.userService.createUser(email, password)
         return 'Регистрация успешна';
     }
