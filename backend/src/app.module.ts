@@ -9,6 +9,8 @@ import { UserModule } from './user/user.module';
 import { EmailService } from './email/email.service';
 import { EmailModule } from './email/email.module';
 import { Email } from './Entities/Email.entity';
+import { TokenServiceService } from './token-service/token-service.service';
+import { TokenServiceModule } from './token-service/token-service.module';
 
 @Module({
   imports: [
@@ -24,9 +26,10 @@ import { Email } from './Entities/Email.entity';
     }),
     AuthModule,
     UserModule,
-    EmailModule
+    EmailModule,
+    TokenServiceModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, TokenServiceService],
 })
 export class AppModule {}
