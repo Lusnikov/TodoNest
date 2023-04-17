@@ -1,17 +1,14 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-
 @Entity()
-export class User{
+export class Email{
+
     @PrimaryGeneratedColumn()
-    userId: number
+    id: number
+
+    @Column()
+    dateSended: Date
 
     @Column()
     email: string
-
-    @Column()
-    password: string
-
-    @Column({default: null})
-    avatarUrl?: string
 }

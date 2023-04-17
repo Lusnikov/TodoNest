@@ -5,6 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { User } from './Entities/UserEntity';
 import { UserActivation } from './Entities/UserActivation.entity';
+import { UserModule } from './user/user.module';
+import { EmailService } from './email/email.service';
+import { EmailModule } from './email/email.module';
+import { Email } from './Entities/Email.entity';
 
 @Module({
   imports: [
@@ -15,10 +19,12 @@ import { UserActivation } from './Entities/UserActivation.entity';
       username: 'root',
       password: 'root',
       database: 'todos_nest',
-      entities: [User, UserActivation],
+      entities: [User, UserActivation, Email],
       synchronize: true,
     }),
-    AuthModule
+    AuthModule,
+    UserModule,
+    EmailModule
   ],
   controllers: [AppController],
   providers: [AppService],

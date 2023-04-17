@@ -6,6 +6,7 @@ import { AddTodoPayload, RefreshReturn, Section, SetTodoData, Todos, UserInterfa
 import { mockSecions, mockTodos } from '@/utils/testConstants'
 import { updateTodoDate } from '../async/async'
 
+const SAULT = 'TESTSAULT'
 
 // Отвечает за обновление refresh-токена и возврат информации о пользователе в случае его валидности
 export const refresh = createAsyncThunk('users/refresh', 
