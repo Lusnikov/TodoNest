@@ -53,18 +53,15 @@ export class UserService {
     async getUserByLink(activationLink: string){
         const link = await  this.UserActivationRepos.findOne({where: {
             activationLink
-        }})
-
-        console.log(link)
-        
-        if (!link)  new HttpException('Ссылки не найдено', 400)
+        }})        
+        if (!link)  throw new HttpException('Ссылки не найдено', 400)
         return {
             user: link.user
         }
     }
 
     async clearActivationLink(user: User){
-        this.UserActivationRepos.delete({user: {userId: user.userId}})
+        await this.UserActivationRepos.delete({user: {userId: user.userId}})
     }
 
     private async createUserAndActivation(email: string, password: string, manage: EntityManager){
