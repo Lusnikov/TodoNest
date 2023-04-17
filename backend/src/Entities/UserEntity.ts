@@ -14,4 +14,7 @@ export class User{
 
     @Column({default: null})
     avatarUrl?: string
+
+    @Column({default: false})
+    activationStatus: Boolean
 }

@@ -2,11 +2,16 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { RegistrationDto } from './dto/registration.dto';
 import { SignInDto } from './dto/signIn.dto';
 import { AuthService } from './auth.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserActivation } from 'src/Entities/UserActivation.entity';
+import { Repository } from 'typeorm';
 
 @Controller('auth')
 export class AuthController {
     constructor (
-        private readonly authService: AuthService
+        private  authService: AuthService,
+      
+
     ){
 
     }
@@ -29,6 +34,7 @@ export class AuthController {
 
     @Get('activate/:link')
     async activate(@Param('link') link: string){
+        await this.authService.activateAccount(link)
         return link
     }
 

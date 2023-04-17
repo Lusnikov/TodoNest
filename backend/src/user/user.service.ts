@@ -33,10 +33,8 @@ export class UserService {
         await this.userRepository.manager.transaction(async (manage) => {
             try{
                const {user, activation}= await this.createUserAndActivation(email, password, manage)
-                // Отправка email
-                console.log(1)
                 await this.emailService.sendEmailWithTransaction(manage, {
-                    message: activation.activationLink,
+                    message: process.env.CURRENT_URL+'/auth/activate/'+activation.activationLink,
                     subject: 'Авторизация',
                     to: 'lika_208@mail.ru'
                 })
@@ -46,6 +44,27 @@ export class UserService {
 
         })
 
+    }
+
+    async updateUserModel(model:User){
+        return await this.userRepository.save(model)
+    }
+
+    async getUserByLink(activationLink: string){
+        const link = await  this.UserActivationRepos.findOne({where: {
+            activationLink
+        }})
+
+        console.log(link)
+        
+        if (!link)  new HttpException('Ссылки не найдено', 400)
+        return {
+            user: link.user
+        }
+    }
+
+    async clearActivationLink(user: User){
+        this.UserActivationRepos.delete({user: {userId: user.userId}})
     }
 
     private async createUserAndActivation(email: string, password: string, manage: EntityManager){
@@ -62,7 +81,8 @@ export class UserService {
 
     private async  generateUniqueLink(userId: number) {
         const saltRounds = 10;
-        return await bcrypt.hash(userId.toString(), saltRounds); // вычисляем хэш с солью от идентификатора пользователя
+        const res = await bcrypt.hash(userId.toString(), saltRounds); // вычисляем хэш с солью от идентификатора пользователя
+        return res.replace(/[\W_]/g, "");
        
       }
     

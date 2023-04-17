@@ -9,6 +9,6 @@ export class UserActivation{
     @Column()
     activationLink: string
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, {eager: true})
     user: User
 }
