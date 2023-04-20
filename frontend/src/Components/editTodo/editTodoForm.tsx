@@ -25,7 +25,8 @@ type Props = {
   onCloseButtonClick: () => void,
   onSubmitForm: (data: Todos) => void,
   message?: string | null ,
-  onChangeValid: (e: Todos| null) => void
+  onChangeValid: (e: Todos| null) => void,
+  isLoading: boolean
 }
 
 
@@ -37,8 +38,9 @@ const EditFormTodo = (props: Props) => {
     sections,
     onSubmitForm, 
     message=null,
-     onCloseButtonClick, 
-     onChangeValid
+    onCloseButtonClick, 
+    onChangeValid,
+    isLoading
   } = props
   const { register, handleSubmit, formState, watch , formState: { isValidating }, setValue, getValues} = useForm<Todos>({
     defaultValues:{
@@ -57,18 +59,15 @@ const EditFormTodo = (props: Props) => {
 
   const data = watch();
 
- 
-
   React.useEffect(() => {
     const isValid = formState.isValid && !isValidating;
     onChangeValid(isValid ? data : null)
-    console.log(1)
   }, [formState.isValid, JSON.stringify(data), isValidating]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {todo.id}
-  <FormControl pt={10} isInvalid={true} >
+  <FormControl pt={10}  >
     <Heading mb={4}>
       Редактирование Todo-элемента 
     </Heading>
@@ -86,10 +85,7 @@ const EditFormTodo = (props: Props) => {
       {...register('title', {required: true})}
 
     />
-    <FormErrorMessage>
-      {/* {todoError} */}
-    </FormErrorMessage>
-
+   
     <FormLabel>
       Введите Контент
     </FormLabel>
@@ -98,10 +94,7 @@ const EditFormTodo = (props: Props) => {
       placeholder="Введите текстовое содержание" 
       {...register('content', {required: true})}
     />
-    <FormErrorMessage>
-      {/* {contentError} */}
-    </FormErrorMessage>
-      
+
     <FormLabel>
       Время завершения туду (необязательно)
     </FormLabel>
@@ -110,14 +103,6 @@ const EditFormTodo = (props: Props) => {
       initialValue={dateEnded}
       onChange={(date) => setValue('dateEnded',  date ?? undefined)}
     />    
-
-    {/* {date &&
-      <TimePicker
-        value={time ?? "23:59"}
-        disableClock
-        onChange={e => setTime(e)}
-      />
-    } */}
 
     <FormLabel>
       Выберите группу (необязательно)
@@ -128,13 +113,8 @@ const EditFormTodo = (props: Props) => {
       getOptionLabel={opt => opt.name}
       getOptionValue={opt => opt.name}
       placeholder={'Выберите группу'}
-   
-      // onChange={e =>  setGroup(e as Section)}
       options={sections}
-      onChange={(option, triggeredAction) => {
-        // if (triggeredAction.action === 'clear') {
-        //   return setValue('section', undefined)
-        // }
+      onChange={(option) => {
         return setValue('section', option ?? undefined, {shouldValidate: true})
       }
       }
@@ -142,9 +122,7 @@ const EditFormTodo = (props: Props) => {
     />
 
     <Button 
-        // isLoading={isCreated} 
-        // isDisabled={submitDisabled} 
-        // onClick={createTodo}
+        isLoading={isLoading} 
         mt={5}
         type='submit'
     >

@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Section } from "./Section.entity";
+import { Todo } from "./Todo.entity";
 
 
 @Entity()
@@ -17,4 +19,10 @@ export class User{
 
     @Column({default: false})
     activationStatus: Boolean
+
+    @OneToMany(() => Section, (e) => e.user, {eager: true})
+    sections: Section[]
+
+    @OneToMany(() => Todo, (e) => e.user, {eager: true})
+    todos: Todo[]
 }

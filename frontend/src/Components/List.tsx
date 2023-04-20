@@ -7,7 +7,7 @@ type Props<T> = {
 
 interface DefaultObject {
     [key: string]: any
-  }
+  } 
 
 export const List = <T extends DefaultObject>(props: Props<T>) => {
   const {

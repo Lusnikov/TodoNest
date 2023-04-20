@@ -101,16 +101,16 @@ export const removeTodo = createAsyncThunk('todos/removeTodo',
 )
 
 
-// const initialState: UserInterface | null = {
-//   avatarUrl: '',
-//   id: 1,
-//   name: '1',
-//   sections: mockSecions,
-//   todos:  mockTodos,
+const initialState: UserInterface | null = {
+  avatarUrl: '',
+  id: 1,
+  name: '1',
+  sections: mockSecions,
+  todos:  mockTodos,
 
-// } as UserInterface | null
+} as UserInterface | null
 
-const initialState: UserInterface | null = null as UserInterface | null
+// const initialState: UserInterface | null = null as UserInterface | null
 
 export const userSlice = createSlice({
   name: 'counter',

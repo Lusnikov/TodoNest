@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { RegistrationDto } from './dto/registration.dto';
 import { SignInDto } from './dto/signIn.dto';
 import { AuthService } from './auth.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserActivation } from 'src/Entities/UserActivation.entity';
 import { Repository } from 'typeorm';
+import { SignInResponse } from './types/types';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -23,8 +25,14 @@ export class AuthController {
     }
 
     @Post('/singIn')
-    async signIn(@Body() signInDto: SignInDto){
-        return 'signIn'
+    async signIn(@Body() signInDto: SignInDto, @Res({passthrough: true}) res: Response):SignInResponse{
+        const {accessToken,refreshToken,userData} = await this.authService.login(signInDto)
+        console.log( {accessToken,refreshToken,userData})
+        res.cookie('refresh', refreshToken)
+        return {
+            accessToken: '1',
+            userData
+        }
     }
 
     @Post('refresh')

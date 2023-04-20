@@ -2,18 +2,21 @@ import { Button, Wrap, WrapItem } from '@chakra-ui/react'
 import React, { useState } from 'react'
 
 type Props = {
-    onDelete: () => void
+    onDelete: () => void,
+    onEdit: () => void
 }
 
 
 
-export function   InstrumentsList({onDelete}: Props)  {
+export function   InstrumentsList({onDelete, onEdit}: Props)  {
   const [isDeleting, setIsDeleting] = useState<boolean>(false)
+  
 
   const onDeleteHandler = () => {
      setIsDeleting(true)
      onDelete()
   }
+  
 
   return (
     <Wrap>
@@ -21,15 +24,16 @@ export function   InstrumentsList({onDelete}: Props)  {
             <Button 
                 colorScheme='red'
                 isLoading={isDeleting}
-                onClick={onDeleteHandler}
-                
-            
+                onClick={onDeleteHandler} 
             >
                  Удалить 
             </Button>
     </WrapItem>
     <WrapItem>
-      <Button colorScheme='yellow'>
+      <Button 
+          colorScheme='yellow'
+          onClick={onEdit}
+      >
           Редактировать 
       </Button>
     </WrapItem>

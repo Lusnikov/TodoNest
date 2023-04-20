@@ -23,7 +23,6 @@ export type Todos = {
   dateCreated: Date,
   section?: Section,
   dateEnded?: Date ,
-  // status: "ended" | "inProcess" | "success" ,
   title: string,
   content: string,
   completed: boolean

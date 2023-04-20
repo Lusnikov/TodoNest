@@ -11,6 +11,8 @@ import { EmailModule } from './email/email.module';
 import { Email } from './Entities/Email.entity';
 import { TokenServiceService } from './token-service/token-service.service';
 import { TokenServiceModule } from './token-service/token-service.module';
+import { Section } from './Entities/Section.entity';
+import { Todo } from './Entities/Todo.entity';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { TokenServiceModule } from './token-service/token-service.module';
       username: 'root',
       password: 'root',
       database: 'todos_nest',
-      entities: [User, UserActivation, Email],
+      entities: [User, UserActivation, Email,Section, Todo],
       synchronize: true,
     }),
     AuthModule,

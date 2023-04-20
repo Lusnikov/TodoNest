@@ -1,12 +1,17 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectConnection, InjectEntityManager, InjectRepository,  } from '@nestjs/typeorm';
 import { User } from 'src/Entities/UserEntity';
 import { UserActivation } from 'src/Entities/UserActivation.entity';
 import { EntityManager, Repository, Transaction } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { EmailService } from 'src/email/email.service';
+import { ClientUserData } from 'types/types';
 
-const SAULT = 10
+export const SAULT = 10
+
+// USER { 
+// }
+type T = Partial<User>
 
 @Injectable()
 export class UserService {
@@ -64,6 +69,23 @@ export class UserService {
         await this.UserActivationRepos.delete({user: {userId: user.userId}})
     }
 
+    // {}
+    async getUserBy<T extends keyof User>(field:  T, value: User[T]){
+        const user = await this.userRepository.findOne({
+            where:{
+                [field]: value
+            }
+        
+        })
+
+        if (!user) throw new NotFoundException()
+        return user
+    }
+
+    createClientDto(user: User):ClientUserData{
+        return
+    }
+
     private async createUserAndActivation(email: string, password: string, manage: EntityManager){
         const user = new User()
         user.email = email
@@ -82,6 +104,8 @@ export class UserService {
         return res.replace(/[\W_]/g, "");
        
       }
+
+    
     
 }
 

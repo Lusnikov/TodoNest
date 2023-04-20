@@ -3,6 +3,8 @@ import { SAULT, UserService } from 'src/user/user.service';
 import { SignInDto } from './dto/signIn.dto';
 import * as bcrypt from 'bcrypt';
 import { TokenServiceService } from 'src/token-service/token-service.service';
+import { ClientUserData } from 'types/types';
+import { UserDto } from 'src/dto/User.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,24 +18,15 @@ export class AuthService {
         // Найти пользователя 
         const {email, password} = signInDto
         const user = await this.userService.getUserBy('email', email)
-        if ( !user ) throw new UnauthorizedException()
-        if ( !bcrypt.compareSync(password, user.password) )  throw new UnauthorizedException()
-        if ( !user.activationStatus ) throw new UnauthorizedException()
+        if ( !user ) throw new UnauthorizedException({code: 1})
+        if ( !bcrypt.compareSync(password, user.password) )  throw new UnauthorizedException({code: 1})
+        if ( !user.activationStatus )  throw new UnauthorizedException({code: 2})
 
-        
-       
-        // console.log(userData)
+        const userDto = new UserDto(user).toClientDto()
 
-        // this.tokenService.generateAccessRefresh()
-        // Пользователь найден
-        // 
-      
         return {
-            accessToken: '',
-            refreshToken: '',
-            userData: {
-                
-            }
+            ...this.tokenService.generateAccessRefresh(userDto),
+            userData: userDto,
         }
         
  

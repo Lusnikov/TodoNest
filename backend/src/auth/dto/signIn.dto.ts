@@ -7,4 +7,5 @@ export class SignInDto{
 
     @Length(3, 20)
     password: string
+
 }

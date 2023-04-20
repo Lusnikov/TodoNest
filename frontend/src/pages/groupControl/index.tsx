@@ -24,8 +24,7 @@ export default function Home() {
      <Header/>
 
     <Container>
-      {JSON.stringify(sections)}
-      <CreateGroupForm/>
+      <CreateGroupForm />
     </Container>
 
     

@@ -10,6 +10,7 @@ import { useDrop } from 'react-dnd';
 import DropTab from './motion/DropTab';
 import { InstrumentsList } from './TodoList/InstrumentsList';
 import { List } from './List';
+import { useRouter } from 'next/router';
 
 
 const defaultSections = [
@@ -37,6 +38,7 @@ const TodoList = ({}: Props) => {
   const sections = [...defaultSections,...useAppSelector(state => state.user?.sections as Section[])]
 
   const dispatch = useAppDispatch()
+  const router = useRouter()
 
   const getHandlerByIndex = (index:number) => ({
     0: () => todos.filter(e => !e.completed),
@@ -80,6 +82,14 @@ const TodoList = ({}: Props) => {
           {
               selectedId.length > 0 && 
                 <InstrumentsList
+                  onEdit={() => {
+                    router.push({
+                      pathname: '/editTodo',
+                      query: {id: selectedId },
+                    
+                    })
+                
+                  }}
                   onDelete={() =>  dispatch(removeTodo(selectedId))
                     .finally(() => setSelectedId([]))
                   }
