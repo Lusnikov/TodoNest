@@ -27,14 +27,14 @@ export class AuthController {
     @Post('/singIn')
     async signIn(@Body() signInDto: SignInDto, @Res({passthrough: true}) res: Response):SignInResponse{
         const {accessToken,refreshToken,userData} = await this.authService.login(signInDto)
-        console.log( {accessToken,refreshToken,userData})
-        res.cookie('refresh', refreshToken)
+        const expires = new Date();
+        expires.setHours(expires.getHours() + 1);
+        res.cookie('refresh', refreshToken, { httpOnly: true, expires: expires})
         return {
-            accessToken: '1',
+            accessToken,
             userData
         }
     }
-
     @Post('refresh')
     async refresh(){
         return 'refresh'
