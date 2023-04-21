@@ -20,6 +20,9 @@ export class User{
     @Column({default: false})
     activationStatus: Boolean
 
+    @Column({default: null, length: 12389})
+    refreshToken: string
+
     @OneToMany(() => Section, (e) => e.user, {eager: true})
     sections: Section[]
 

@@ -13,6 +13,8 @@ import { TokenServiceService } from './token-service/token-service.service';
 import { TokenServiceModule } from './token-service/token-service.module';
 import { Section } from './Entities/Section.entity';
 import { Todo } from './Entities/Todo.entity';
+import { TodosModule } from './todos/todos.module';
+import { JwtAuthGuard } from './auth/auth.guard';
 
 @Module({
   imports: [
@@ -29,9 +31,11 @@ import { Todo } from './Entities/Todo.entity';
     AuthModule,
     UserModule,
     EmailModule,
-    TokenServiceModule
+    TokenServiceModule,
+    TodosModule,
+  
   ],
   controllers: [AppController],
-  providers: [AppService, TokenServiceService],
+  providers: [AppService, TokenServiceService,],
 })
 export class AppModule {}

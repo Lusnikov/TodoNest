@@ -10,6 +10,7 @@ export class UserDto implements User  {
     todos: Todo[];
     sections: Section[];
     password: string;
+    refreshToken: string;
 
     constructor(user: User){
         this.userId= user.userId;
@@ -20,6 +21,7 @@ export class UserDto implements User  {
         this.todos = user.todos
         this.sections = user.sections
         this.password = user.password
+        this.refreshToken = user.refreshToken
     }
 
     toClientDto():ClientUserData{

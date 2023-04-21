@@ -118,7 +118,6 @@ const EditFormTodo = (props: Props) => {
         return setValue('section', option ?? undefined, {shouldValidate: true})
       }
       }
-      
     />
 
     <Button 

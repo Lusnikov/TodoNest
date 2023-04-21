@@ -3,6 +3,7 @@ import { User } from "./UserEntity";
 import { Todo } from "./Todo.entity";
 
 
+
 @Entity()
 export class Section{
     @PrimaryGeneratedColumn()
@@ -19,3 +20,5 @@ export class Section{
 
   
 }
+
+export type SectionPayload = Pick<Section, 'id'|'name'>

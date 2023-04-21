@@ -5,13 +5,40 @@ import * as bcrypt from 'bcrypt';
 import { TokenServiceService } from 'src/token-service/token-service.service';
 import { ClientUserData } from 'types/types';
 import { UserDto } from 'src/dto/User.dto';
+import { User } from 'src/Entities/UserEntity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
     constructor(
         private userService: UserService,
-        private tokenService: TokenServiceService
+        private tokenService: TokenServiceService,
+        @InjectRepository(User)
+        private userRepository: Repository<User>
     ){}
+
+    private async saveRefreshDb(user: User, token: string){
+        await this.userService.saveTokenIdDatabase(user, token);
+    }
+
+    async refreshTokenExits(userId: number,token: string){
+        const result = await this.userRepository.findOne({where: {
+            refreshToken: token,
+            userId
+        }})
+        if (result === null) throw new UnauthorizedException()
+    }
+
+    async updateRefreshToken(userId: number, token: string){
+        const user = await this.userRepository.findOne({
+            where: {
+                userId: userId,
+            }
+        })
+        user.refreshToken = token
+        await this.userRepository.save(user)
+    }
 
     async login(signInDto: SignInDto){
         // Проверить аккаунт на статус активации
@@ -21,11 +48,13 @@ export class AuthService {
         if ( !user ) throw new UnauthorizedException({code: 1})
         if ( !bcrypt.compareSync(password, user.password) )  throw new UnauthorizedException({code: 1})
         if ( !user.activationStatus )  throw new UnauthorizedException({code: 2})
-
+        
         const userDto = new UserDto(user).toClientDto()
+        const tokens = this.tokenService.generateAccessRefresh(userDto)
+        await this.saveRefreshDb(user, tokens.refreshToken)
 
         return {
-            ...this.tokenService.generateAccessRefresh(userDto),
+            ...tokens,
             userData: userDto,
         }
         

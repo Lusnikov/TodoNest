@@ -82,8 +82,12 @@ export class UserService {
         return user
     }
 
-    createClientDto(user: User):ClientUserData{
-        return
+
+
+    async  saveTokenIdDatabase(user: User, token: string){
+        user.refreshToken = token
+        this.userRepository.save(user)
+        console.log('save in db', user)
     }
 
     private async createUserAndActivation(email: string, password: string, manage: EntityManager){
